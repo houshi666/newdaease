@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+</head>
+
+<body style="height: 100%;">
+  <div id="link"></div>
+</body>
+<script>
+  function getQueryVariable(variable) {
+    debugger
+    let query = window.location.search.substring(1)
+    let vars = []
+    if (!query) {
+      query = document.cookie
+      vars = query.split(';')
+    } else {
+      vars = query.split('&')
+    }
+    for (var i = 0; i < vars.length; i++) {
+      const pair = vars[i].split('=')
+      if (pair[0].trim() === variable) {
+        return pair[1]
+      }
+    }
+    return (false)
+  }
+
+  //两个参数，一个是cookie的名子，一个是值
+  function SetCookie(name,value){
+    var Days = 1;//此 cookie 将被保存 1 天
+    var exp = new Date();//new Date("December 31, 9998");
+    exp.setTime(exp.getTime() + Days*24*60*60*1000);
+    document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+  }
+
+  //取cookies函数
+  function getCookie(name){
+    var arr = document.cookie.match(new RegExp("(^| )" + name + "=([^;]*)(;|$)"));
+    if (arr != null) return unescape(arr[2]); return null;
+  }
+
+  console.log("当前link页面链接：", window.location.href)
+  SetCookie("linkPanelHref", window.location.href)
+  let linkPanelHref = getCookie("linkPanelHref")
+  console.log("存储link页面的cookie：", linkPanelHref)
+  let visitToken = getCookie("Authorization")
+  console.log("存储link页面的authorizationToken：", visitToken)
+
+  const link = getQueryVariable('link')
+  const user = getQueryVariable('user')
+  const token = getQueryVariable('token')
+  const terminal = getQueryVariable('terminal')
+  const attachParams = getQueryVariable('attachParams')
+  const visitCode = getQueryVariable('visitCode')
+
+  debugger
+
+  console.log("link.html的link未编码---->", link)
+  console.log("link.html的user未编码---->", user)
+  console.log("aaaaaaaaaaaaaaaa---->")
+  let url = "/delink?link=" + encodeURIComponent(link)
+  if (terminal) {
+    url += '&terminal=' + terminal
+  }
+  if (user) {
+    url += '&user=' + encodeURIComponent(user)
+  }
+  if (attachParams) {
+    url += '&attachParams=' + encodeURIComponent(attachParams)
+  }
+  if (token) {
+    url += '&token=' + encodeURIComponent(token)
+  }
+  if (visitToken) {
+    url += '&visitToken=' + encodeURIComponent(visitToken)
+  }
+  if (visitCode) {
+    url += '&visitCode=' + encodeURIComponent(visitCode)
+  }
+  window.location.href = url
+</script>
+
+</html>
